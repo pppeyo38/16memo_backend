@@ -1,0 +1,7 @@
+POST http://localhost/users/1 HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "ぺよ",
+    "screen_name": "peyopeyo"
+}
