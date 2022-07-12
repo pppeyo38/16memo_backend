@@ -1,3 +1,12 @@
+MemoFile.create!(
+    memo_id: 1,
+    color_file_id: 1
+)
+MemoFile.create!(
+    memo_id: 2,
+    color_file_id: 2
+)
+
 # Memo.create!(
 #     user_id: 2,
 #     tag_id: 1,
