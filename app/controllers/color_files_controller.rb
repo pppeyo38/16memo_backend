@@ -3,18 +3,21 @@ class ColorFilesController < ApplicationController
 
   # GET /color_files
   def index
-    @color_files = ColorFile.all
+    @color_files = ColorFile.preload(:memos).all
 
     @file = []
     @color_files.each_with_index do | color_file, index |
       # ファイル内カラー4色
-      @main_color_dist = Memo.where(color_file_id: color_file.id).select(:color_code).first(4)
-      @main_color = []
-      @main_color_dist.each_with_index do | item, index |
-        @main_color[index] = item.color_code
-      end
+      @main_color = color_file.memos.first(4).map {|m| m.color_code}
+      @color_num = color_file.memos.length
+
+      # @main_color_dist = Memo.where(color_file_id: color_file.id).select(:color_code).first(4)
+      # @main_color = []
+      # @main_color_dist.each_with_index do | item, index |
+      #   @main_color[index] = item.color_code
+      # end
       # ファイル内のメモ数取得
-      @color_num = Memo.where(color_file_id: color_file.id).count
+      # @color_num = Memo.where(color_file_id: color_file.id).count
 
       @file[index] = {
         name: color_file.name,
