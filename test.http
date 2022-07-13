@@ -7,5 +7,5 @@ content-type: application/json
 	"comment": "とかげかわいい",
 	"URL": "https://www.san-x.co.jp/sumikko/",
 	"tag_name": "タグ1",
-	"color_file_name": "ファイル1",
+	"color_file_name": "ファイル1"
 }
