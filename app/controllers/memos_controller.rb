@@ -27,9 +27,8 @@ class MemosController < ApplicationController
       return
     end
 
-    @tag = Tag.find_by(name: @tag_name)
-    @color_file = ColorFile.find_by(name: @color_file_name)
-
+    @tag = Tag.find_by(name: tag_name)
+    @color_file = ColorFile.find_by(name: color_file_name)
 
     ActiveRecord::Base.transaction do
       @tag ||= Tag.create!(name: tag_name)
