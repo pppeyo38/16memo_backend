@@ -5,7 +5,29 @@ class ColorFilesController < ApplicationController
   def index
     @color_files = ColorFile.all
 
-    render json: @color_files
+    @file = []
+    @color_files.each_with_index do | color_file, index |
+      # ファイル内カラー4色
+      @main_color_dist = Memo.where(color_file_id: color_file.id).select(:color_code).first(4)
+      @main_color = []
+      @main_color_dist.each_with_index do | item, index |
+        @main_color[index] = item.color_code
+      end
+      # ファイル内のメモ数取得
+      @color_num = Memo.where(color_file_id: color_file.id).count
+
+      @file[index] = {
+        name: color_file.name,
+        user_id: color_file.user_id,
+        memo: {
+          main_color: @main_color,
+          color_num: @color_num
+        },
+        created_at: color_file.created_at
+      }
+    end
+
+    render json: @file
   end
 
   # GET /color_files/1
@@ -42,6 +64,8 @@ class ColorFilesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_color_file
       @color_file = ColorFile.find(params[:id])
+
+      render json: @color_file
     end
 
     # Only allow a list of trusted parameters through.
