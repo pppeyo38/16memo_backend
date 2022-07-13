@@ -2,7 +2,6 @@ POST http://127.0.0.1:3000/memos HTTP/1.1
 content-type: application/json
 
 {
-  "user_id": 1,
 	"color_code": "asdfgh",
 	"comment": "とかげかわいい",
 	"URL": "https://www.san-x.co.jp/sumikko/",

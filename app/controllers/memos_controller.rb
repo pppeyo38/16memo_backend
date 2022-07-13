@@ -16,44 +16,40 @@ class MemosController < ApplicationController
 
   # POST /memos
   def create
-    # puts "-------------------------"
-    # puts memo_params
+    # TODO: ログイン中のユーザーの user_id を取得する
+    user_id = 1
 
-    @tag = Tag.find_by(name: memo_params.tag_name)
-    @color_file = ColorFile.find_by(name: memo_params.color_file_name)
+    tag_name = params[:tag_name]
+    color_file_name = params[:color_file_name]
 
-    puts @tag
-    puts @color_file
+    if tag_name.blank? || color_file_name.blank?
+      render json: { error: 'tag_name and color_file_name are required' }, status: :unprocessable_entity
+      return
+    end
 
-    # # TODO: transaction をつける
-    # unless @tag
-    #   @tag = Tag.create!(name: memo_params.tag_name)
-    # end
-    # unless @color_file
-    #   @color_file = ColorFile.create!(name: memo_params.color_file_name)
-    # end
-
-    # @memo = Memo.create!(
-    #   # TODO: ログイン中のユーザーIDを指定する
-    #   user_id: 1,
-    #   tag_id: @tag.id,
-    #   color_file_id: @color_file.id,
-    #   color_code: memo_params.color_code,
-    #   comment: memo_params.comment,
-    #   url: memo_params.url,
-    # )
+    @tag = Tag.find_by(name: @tag_name)
+    @color_file = ColorFile.find_by(name: @color_file_name)
 
 
+    ActiveRecord::Base.transaction do
+      unless @tag
+        @tag = Tag.create!(name: tag_name)
+      end
+      unless @color_file
+        @color_file = ColorFile.create!(name: color_file_name, user_id: user_id)
+      end
 
+      @memo = Memo.create!(
+        **memo_params,
+        # TODO: ログイン中のユーザーIDを指定する
+        user_id: user_id,
+        tag_id: @tag.id,
+        color_file_id: @color_file.id,
+      )
+    end
 
-    # if @memo.save
-    #   render json: @memo, status: :created, location: @memo
-    # else
-    #   render json: @memo.errors, status: :unprocessable_entity
-    # end
-
-    # render json: @memo
-    render json: []
+  rescue => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   # PATCH/PUT /memos/1
@@ -78,6 +74,6 @@ class MemosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def memo_params
-      params.require(:memo).permit(:user_id, :tag_name, :color_file_name, :color_code, :comment, :url)
+      params.require(:memo).permit(:user_id, :color_code, :comment, :url)
     end
 end
