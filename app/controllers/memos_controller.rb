@@ -41,7 +41,6 @@ class MemosController < ApplicationController
 
       @memo = Memo.create!(
         **memo_params,
-        # TODO: ログイン中のユーザーIDを指定する
         user_id: user_id,
         tag_id: @tag.id,
         color_file_id: @color_file.id,
