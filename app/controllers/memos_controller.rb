@@ -41,6 +41,7 @@ class MemosController < ApplicationController
         color_file_id: @color_file.id,
       )
     end
+    render json: @memo, status: :created, location: @memo
 
   rescue => e
     render json: { error: e.message }, status: :unprocessable_entity
