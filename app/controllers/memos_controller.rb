@@ -32,12 +32,8 @@ class MemosController < ApplicationController
 
 
     ActiveRecord::Base.transaction do
-      unless @tag
-        @tag = Tag.create!(name: tag_name)
-      end
-      unless @color_file
-        @color_file = ColorFile.create!(name: color_file_name, user_id: user_id)
-      end
+      @tag ||= Tag.create!(name: tag_name)
+      @color_file ||= ColorFile.create!(name: color_file_name, user_id: user_id)
 
       @memo = Memo.create!(
         **memo_params,
