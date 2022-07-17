@@ -17,7 +17,7 @@ class MemosController < ApplicationController
   # POST /memos
   def create
     # TODO: ログイン中のユーザーの user_id を取得する
-    user_id = 1
+    user_id = 3
 
     tag_name = params[:tag_name]
     color_file_name = params[:color_file_name]
@@ -28,7 +28,7 @@ class MemosController < ApplicationController
     end
 
     @tag = Tag.find_by(name: tag_name)
-    @color_file = ColorFile.find_by(name: color_file_name)
+    @color_file = ColorFile.find_by(name: color_file_name, user_id: user_id)
 
     ActiveRecord::Base.transaction do
       @tag ||= Tag.create!(name: tag_name)
