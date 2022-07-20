@@ -99,6 +99,22 @@ class MemosController < ApplicationController
 
   # PATCH/PUT /memos/1
   def update
+    # 変更にタグ名が含まれていた場合
+    if params[:tag_name]
+      tag_name = params[:tag_name]
+
+      # タグが既に存在する場合データを取得、なければ新規作成
+      if Tag.exists?(name: tag_name)
+        puts "あった！"
+        @tag = Tag.find_by(name: tag_name)
+      else
+        puts "なかった！"
+        @tag = Tag.create!(name: tag_name)
+      end
+
+      @memo.update(tag_id: @tag.id)
+    end
+
     if @memo.update(memo_params)
       render json: @memo
     else
@@ -115,16 +131,17 @@ class MemosController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     # メモを1つだけ取得
     def set_memo
-      @get_memo = Memo.preload(:tag).find(params[:id])
+      @memo = Memo.find(params[:id])
+      # @get_memo = Memo.preload(:tag).find(params[:id])
 
-      @memo = {
-        id: @get_memo.id,
-        color_code: @get_memo.color_code,
-        comment: @get_memo.comment,
-        URL: @get_memo.url,
-        tag_name: @get_memo.tag.name,
-        created_at: @get_memo.created_at
-      }
+      # @memo = {
+      #   id: @get_memo.id,
+      #   color_code: @get_memo.color_code,
+      #   comment: @get_memo.comment,
+      #   URL: @get_memo.url,
+      #   tag_name: @get_memo.tag.name,
+      #   created_at: @get_memo.created_at
+      # }
     end
 
     # Only allow a list of trusted parameters through.
