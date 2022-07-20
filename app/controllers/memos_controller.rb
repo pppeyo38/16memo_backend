@@ -4,7 +4,19 @@ class MemosController < ApplicationController
 
   # GET /memos
   def index
-    @memos = Memo.all
+    @get_memos = Memo.preload(:tag).all
+
+    @memos = []
+    @get_memos.each_with_index do | get_memo, index |
+      @memos[index] = {
+        id: get_memo.id,
+        color_code: get_memo.color_code,
+        comment: get_memo.comment,
+        URL: get_memo.url,
+        tag_name: get_memo.tag.name,
+        created_at: get_memo.created_at
+      }
+    end
 
     render json: @memos
   end
