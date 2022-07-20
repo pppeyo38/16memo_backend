@@ -105,17 +105,13 @@ class MemosController < ApplicationController
 
       # タグが既に存在する場合データを取得、なければ新規作成
       if Tag.exists?(name: tag_name)
-        puts "あった！"
         @tag = Tag.find_by(name: tag_name)
       else
-        puts "なかった！"
         @tag = Tag.create!(name: tag_name)
       end
-
-      @memo.update(tag_id: @tag.id)
     end
 
-    if @memo.update(memo_params)
+    if @memo.update(memo_params) || @memo.update(tag_id: @tag.id)
       render json: @memo
     else
       render json: @memo.errors, status: :unprocessable_entity
@@ -129,7 +125,6 @@ class MemosController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    # メモを1つだけ取得
     def set_memo
       @memo = Memo.find(params[:id])
       # @get_memo = Memo.preload(:tag).find(params[:id])
