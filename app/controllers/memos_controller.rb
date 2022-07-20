@@ -45,6 +45,25 @@ class MemosController < ApplicationController
     render json: @memos
   end
 
+  # GET /memos/search
+  def search
+    @get_memos = Memo.joins(:tag).where('tags.name = ?', params[:q])
+
+    @memos = []
+    @get_memos.each_with_index do | get_memo, index |
+      @memos[index] = {
+        id: get_memo.id,
+        color_code: get_memo.color_code,
+        comment: get_memo.comment,
+        URL: get_memo.url,
+        tag_name: get_memo.tag.name,
+        created_at: get_memo.created_at
+      }
+    end
+
+    render json: @memos
+  end
+
   # POST /memos
   def create
     # TODO: ログイン中のユーザーの user_id を取得する
