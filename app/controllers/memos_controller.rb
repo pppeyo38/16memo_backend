@@ -28,7 +28,7 @@ class MemosController < ApplicationController
 
   # GET /file/1
   def show_inFile
-    @get_memos = Memo.preload(:tag).where(color_file_id: params[:id])
+    @get_memos = Memo.joins(:tag).where(color_file_id: params[:id])
 
     @memos = []
     @get_memos.each_with_index do | get_memo, index |
