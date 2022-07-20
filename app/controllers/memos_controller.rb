@@ -63,8 +63,22 @@ class MemosController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    # メモを1つだけ取得
     def set_memo
-      @memo = Memo.find(params[:id])
+      # @memo = Memo.find(params[:id])
+
+      @get_memo = Memo.preload(:tag).find(params[:id])
+      # puts "---------"
+      # puts @memo.tag.name
+
+      @memo = {
+        id: @get_memo.id,
+        color_code: @get_memo.color_code,
+        comment: @get_memo.comment,
+        URL: @get_memo.url,
+        tag_name: @get_memo.tag.name,
+        created_at: @get_memo.created_at
+      }
     end
 
     # Only allow a list of trusted parameters through.
