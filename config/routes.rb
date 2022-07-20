@@ -3,8 +3,6 @@ Rails.application.routes.draw do
   resources :memos
   resources :color_files
   resources :users
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  get 'files/:id', to: 'memos#show_inFile'
 end
