@@ -3,7 +3,10 @@ class ColorFilesController < ApplicationController
 
   # GET /color_files
   def index
-    @color_files = ColorFile.preload(:memos).all
+    # TODO: ログイン中のユーザーの user_id を取得する
+    user_id = 3
+
+    @color_files = ColorFile.eager_load(user: :memos).where(users: { id: user_id })
 
     @file = @color_files.map do | color_file |
       # ファイル内カラー4色
