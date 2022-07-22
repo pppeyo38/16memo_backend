@@ -28,7 +28,6 @@ class ColorFilesController < ApplicationController
   # GET /color_files/1
   def show
     @get_memos = Memo.joins(:tag).where(color_file_id: params[:id])
-
     @memos = @get_memos.map do | get_memo |
       {
         id: get_memo.id,
@@ -40,7 +39,14 @@ class ColorFilesController < ApplicationController
       }
     end
 
-    render json: @memos
+    @color_file = ColorFile.find(params[:id])
+    @memos_file = {
+      id: @color_file.id,
+      name: @color_file.name,
+      memos: @memos
+    }
+
+    render json: @memos_file
   end
 
   # POST /color_files
