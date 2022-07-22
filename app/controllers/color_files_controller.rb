@@ -5,13 +5,12 @@ class ColorFilesController < ApplicationController
   def index
     @color_files = ColorFile.preload(:memos).all
 
-    @file = []
-    @color_files.each_with_index do | color_file, index |
+    @file = @color_files.map do | color_file |
       # ファイル内カラー4色
       @main_color = color_file.memos.first(4).map {|m| m.color_code}
       @color_num = color_file.memos.length
 
-      @file[index] = {
+      {
         name: color_file.name,
         user_id: color_file.user_id,
         memo: {
