@@ -3,8 +3,10 @@ Rails.application.routes.draw do
   resources :memos
   resources :color_files
   resources :users
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  # ファイルを指定してその中にあるメモを返す
+  get 'files/:id', to: 'memos#show_inFile'
+
+  # タグ検索
+  get 'search', to: 'memos#search'
 end
