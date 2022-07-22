@@ -1,5 +1,5 @@
 class ColorFilesController < ApplicationController
-  before_action :set_color_file, only: %i[ show update destroy ]
+  before_action :set_color_file, only: %i[ update destroy ]
 
   # GET /color_files
   def index
@@ -27,7 +27,20 @@ class ColorFilesController < ApplicationController
 
   # GET /color_files/1
   def show
-    render json: @color_file
+    @get_memos = Memo.joins(:tag).where(color_file_id: params[:id])
+
+    @memos = @get_memos.map do | get_memo |
+      {
+        id: get_memo.id,
+        color_code: get_memo.color_code,
+        comment: get_memo.comment,
+        URL: get_memo.url,
+        tag_name: get_memo.tag.name,
+        created_at: get_memo.created_at
+      }
+    end
+
+    render json: @memos
   end
 
   # POST /color_files
