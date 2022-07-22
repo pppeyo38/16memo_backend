@@ -105,7 +105,7 @@ class MemosController < ApplicationController
       if Tag.exists?(name: tag_name)
         @tag = Tag.find_by(name: tag_name)
       else
-        @tag = Tag.create!(name: tag_name)
+        @tag = Tag.create(name: tag_name)
       end
     end
 
