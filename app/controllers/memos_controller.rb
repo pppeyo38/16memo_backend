@@ -30,9 +30,8 @@ class MemosController < ApplicationController
   def show_inFile
     @get_memos = Memo.joins(:tag).where(color_file_id: params[:id])
 
-    @memos = []
-    @get_memos.each_with_index do | get_memo, index |
-      @memos[index] = {
+    @memos = @get_memos.map do | get_memo |
+      {
         id: get_memo.id,
         color_code: get_memo.color_code,
         comment: get_memo.comment,
@@ -49,9 +48,8 @@ class MemosController < ApplicationController
   def search
     @get_memos = Memo.joins(:tag).where('tags.name = ?', params[:q])
 
-    @memos = []
-    @get_memos.each_with_index do | get_memo, index |
-      @memos[index] = {
+    @memos = @get_memos.map do | get_memo |
+      {
         id: get_memo.id,
         color_code: get_memo.color_code,
         comment: get_memo.comment,
