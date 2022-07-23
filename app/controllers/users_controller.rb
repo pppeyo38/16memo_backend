@@ -3,9 +3,9 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    @users = User.all
-
-    render json: @users
+    # @users = User.all
+    @user = current_user
+    render json: @user
   end
 
   # GET /users/1
@@ -46,6 +46,6 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:name, :screen_name)
+      params.require(:user).permit(:firebase_id, :nickname, :created_id)
     end
 end
