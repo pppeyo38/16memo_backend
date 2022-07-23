@@ -1,6 +1,6 @@
 class MemosController < ApplicationController
   # wrap_parameters format: []
-  before_action :set_memo, only: %i[ show update destroy ]
+  before_action :set_memo, only: %i[ update destroy ]
 
   # GET /memos
   def index
@@ -23,6 +23,16 @@ class MemosController < ApplicationController
 
   # GET /memos/1
   def show
+    @get_memo = Memo.preload(:tag).find(params[:id])
+
+    @memo = {
+      id: @get_memo.id,
+      color_code: @get_memo.color_code,
+      comment: @get_memo.comment,
+      URL: @get_memo.url,
+      tag_name: @get_memo.tag.name,
+      created_at: @get_memo.created_at
+    }
     render json: @memo
   end
 
@@ -125,16 +135,6 @@ class MemosController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_memo
       @memo = Memo.find(params[:id])
-      # @get_memo = Memo.preload(:tag).find(params[:id])
-
-      # @memo = {
-      #   id: @get_memo.id,
-      #   color_code: @get_memo.color_code,
-      #   comment: @get_memo.comment,
-      #   URL: @get_memo.url,
-      #   tag_name: @get_memo.tag.name,
-      #   created_at: @get_memo.created_at
-      # }
     end
 
     # Only allow a list of trusted parameters through.
