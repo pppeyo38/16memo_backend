@@ -1,17 +1,19 @@
 class ColorFilesController < ApplicationController
-  before_action :set_color_file, only: %i[ show update destroy ]
+  before_action :set_color_file, only: %i[ update destroy ]
 
   # GET /color_files
   def index
-    @color_files = ColorFile.preload(:memos).all
+    # TODO: ログイン中のユーザーの user_id を取得する
+    user_id = 3
 
-    @file = []
-    @color_files.each_with_index do | color_file, index |
+    @color_files = ColorFile.eager_load(user: :memos).where(users: { id: user_id })
+
+    @file = @color_files.map do | color_file |
       # ファイル内カラー4色
       @main_color = color_file.memos.first(4).map {|m| m.color_code}
       @color_num = color_file.memos.length
 
-      @file[index] = {
+      {
         name: color_file.name,
         user_id: color_file.user_id,
         memo: {
@@ -27,7 +29,26 @@ class ColorFilesController < ApplicationController
 
   # GET /color_files/1
   def show
-    render json: @color_file
+    @get_memos = Memo.joins(:tag).where(color_file_id: params[:id])
+    @memos = @get_memos.map do | get_memo |
+      {
+        id: get_memo.id,
+        color_code: get_memo.color_code,
+        comment: get_memo.comment,
+        URL: get_memo.url,
+        tag_name: get_memo.tag.name,
+        created_at: get_memo.created_at
+      }
+    end
+
+    @color_file = ColorFile.find(params[:id])
+    @memos_file = {
+      id: @color_file.id,
+      name: @color_file.name,
+      memos: @memos
+    }
+
+    render json: @memos_file
   end
 
   # POST /color_files

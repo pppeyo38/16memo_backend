@@ -26,24 +26,6 @@ class MemosController < ApplicationController
     render json: @memo
   end
 
-  # GET /file/1
-  def show_inFile
-    @get_memos = Memo.joins(:tag).where(color_file_id: params[:id])
-
-    @memos = @get_memos.map do | get_memo |
-      {
-        id: get_memo.id,
-        color_code: get_memo.color_code,
-        comment: get_memo.comment,
-        URL: get_memo.url,
-        tag_name: get_memo.tag.name,
-        created_at: get_memo.created_at
-      }
-    end
-
-    render json: @memos
-  end
-
   # GET /memos/search
   def search
     @get_memos = Memo.joins(:tag).where('tags.name = ?', params[:q])
