@@ -59,8 +59,6 @@ class ColorFilesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_color_file
       @color_file = ColorFile.find(params[:id])
-
-      render json: @color_file
     end
 
     # Only allow a list of trusted parameters through.
