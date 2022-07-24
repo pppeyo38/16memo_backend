@@ -1,5 +1,5 @@
 class ColorFilesController < ApplicationController
-  before_action :set_color_file, only: %i[ update destroy ]
+  before_action :set_color_file, only: %i[ show update destroy ]
 
   # GET /color_files
   def index
@@ -26,26 +26,33 @@ class ColorFilesController < ApplicationController
 
   # GET /color_files/1
   def show
-    @get_memos = Memo.joins(:tag).where(color_file_id: params[:id])
-    @memos = @get_memos.map do | get_memo |
-      {
-        id: get_memo.id,
-        color_code: get_memo.color_code,
-        comment: get_memo.comment,
-        URL: get_memo.url,
-        tag_name: get_memo.tag.name,
-        created_at: get_memo.created_at
+    # リクエストで送られてきたidのcolor_file作成者がログインユーザーのものか検証
+    if @color_file.user_id == @current_user.id
+      @get_memos = Memo.joins(:tag).where(color_file_id: params[:id])
+
+      @memos = @get_memos.map do | get_memo |
+        {
+          id: get_memo.id,
+          color_code: get_memo.color_code,
+          comment: get_memo.comment,
+          URL: get_memo.url,
+          tag_name: get_memo.tag.name,
+          created_at: get_memo.created_at
+        }
+      end
+
+      @color_file = ColorFile.find(params[:id])
+      @memos_file = {
+        id: @color_file.id,
+        name: @color_file.name,
+        memos: @memos
       }
+
+      render json: @memos_file
+    else
+      @error = { text: "見せられないよ！！" }
+      render json: @error
     end
-
-    @color_file = ColorFile.find(params[:id])
-    @memos_file = {
-      id: @color_file.id,
-      name: @color_file.name,
-      memos: @memos
-    }
-
-    render json: @memos_file
   end
 
   # POST /color_files
