@@ -1,6 +1,5 @@
 class MemosController < ApplicationController
   # wrap_parameters format: []
-  before_action :set_memo, only: %i[ update destroy ]
   before_action :my_set_memo, only: %i[ update destroy ]
 
   # GET /memos
@@ -112,11 +111,6 @@ class MemosController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_memo
-      @memo = Memo.find(params[:id])
-    end
-
     def my_set_memo
       @my_memo = @current_user.memos.find(params[:id])
     rescue => e
