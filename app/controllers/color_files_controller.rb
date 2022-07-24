@@ -1,6 +1,6 @@
 class ColorFilesController < ApplicationController
   before_action :set_color_file, only: %i[ show update destroy ]
-  before_action :set_my_color_file, only: %i[ update destroy ]
+  before_action :set_my_color_file, only: %i[ show update destroy ]
 
   # GET /color_files
   def index
@@ -28,7 +28,7 @@ class ColorFilesController < ApplicationController
   # GET /color_files/1
   def show
     # リクエストで送られてきたidのcolor_file作成者がログインユーザーのものか検証
-    if @color_file.user_id == @current_user.id
+    if @my_color_file
       @get_memos = Memo.joins(:tag).where(color_file_id: params[:id])
 
       @memos = @get_memos.map do | get_memo |
@@ -50,9 +50,6 @@ class ColorFilesController < ApplicationController
       }
 
       render json: @memos_file
-    else
-      @error = { text: "見せられないよ！！" }
-      render json: @error
     end
   end
 
@@ -89,6 +86,8 @@ class ColorFilesController < ApplicationController
 
     def set_my_color_file
       @my_color_file = @current_user.color_files.find(params[:id])
+    rescue => e
+      render json: { error: "File does not exist" }
     end
 
     # Only allow a list of trusted parameters through.
