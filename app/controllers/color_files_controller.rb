@@ -87,7 +87,7 @@ class ColorFilesController < ApplicationController
     def set_my_color_file
       @my_color_file = @current_user.color_files.find(params[:id])
     rescue => e
-      render json: { error: "File does not exist" }
+      render json: { error: "File does not exist" }, status: :not_found
     end
 
     # Only allow a list of trusted parameters through.
