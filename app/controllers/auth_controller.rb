@@ -21,6 +21,10 @@ class AuthController < ApplicationController
     render json: { error: e.message, text: "auth_controller.rb:21" }, status: :internal_server_error
   end
 
+  def login
+    render json: current_user
+  end
+
   private
 
   def user_params

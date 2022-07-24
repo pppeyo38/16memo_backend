@@ -5,7 +5,10 @@ Rails.application.routes.draw do
   resources :color_files
 
   # サインアップ
-  get 'signup', to: 'auth#signup'
+  post 'signup', to: 'auth#signup'
+
+  # ログイン
+  get 'login', to: 'auth#login'
 
   # タグ検索
   get 'search', to: 'memos#search'
