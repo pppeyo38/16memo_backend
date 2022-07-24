@@ -1,6 +1,6 @@
 class ColorFilesController < ApplicationController
   before_action :set_color_file, only: %i[ show update destroy ]
-  before_action :set_my_color_file, only: %i[ update ]
+  before_action :set_my_color_file, only: %i[ update destroy ]
 
   # GET /color_files
   def index
@@ -78,7 +78,7 @@ class ColorFilesController < ApplicationController
 
   # DELETE /color_files/1
   def destroy
-    @color_file.destroy
+    @my_color_file.destroy
   end
 
   private
