@@ -1,5 +1,6 @@
 class ColorFilesController < ApplicationController
   before_action :set_color_file, only: %i[ show update destroy ]
+  before_action :set_my_color_file, only: %i[ update ]
 
   # GET /color_files
   def index
@@ -68,10 +69,10 @@ class ColorFilesController < ApplicationController
 
   # PATCH/PUT /color_files/1
   def update
-    if @color_file.update(color_file_params)
-      render json: @color_file
+    if @my_color_file.update(color_file_params)
+      render json: @my_color_file
     else
-      render json: @color_file.errors, status: :unprocessable_entity
+      render json: @my_color_file.errors, status: :unprocessable_entity
     end
   end
 
@@ -84,6 +85,10 @@ class ColorFilesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_color_file
       @color_file = ColorFile.find(params[:id])
+    end
+
+    def set_my_color_file
+      @my_color_file = @current_user.color_files.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
