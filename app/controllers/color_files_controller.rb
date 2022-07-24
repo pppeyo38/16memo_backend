@@ -53,12 +53,12 @@ class ColorFilesController < ApplicationController
 
   # POST /color_files
   def create
-    @color_file = ColorFile.new(color_file_params)
+    @my_color_file = ColorFile.new(**color_file_params, user_id: @current_user.id)
 
-    if @color_file.save
-      render json: @color_file, status: :created, location: @color_file
+    if @my_color_file.save
+      render json: @my_color_file, status: :created, location: @my_color_file
     else
-      render json: @color_file.errors, status: :unprocessable_entity
+      render json: @my_color_file.errors, status: :unprocessable_entity
     end
   end
 
@@ -84,6 +84,6 @@ class ColorFilesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def color_file_params
-      params.require(:color_file).permit(:name, :user_id)
+      params.require(:color_file).permit(:name)
     end
 end
