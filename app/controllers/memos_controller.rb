@@ -1,6 +1,7 @@
 class MemosController < ApplicationController
   # wrap_parameters format: []
   before_action :set_memo, only: %i[ update destroy ]
+  before_action :my_set_memo, only: %i[ update ]
 
   # GET /memos
   def index
@@ -86,22 +87,22 @@ class MemosController < ApplicationController
 
   # PATCH/PUT /memos/1
   def update
-    # 変更にタグ名が含まれていた場合
-    if params[:tag_name]
-      tag_name = params[:tag_name]
-
-      # タグが既に存在する場合データを取得、なければ新規作成
-      if Tag.exists?(name: tag_name)
-        @tag = Tag.find_by(name: tag_name)
-      else
-        @tag = Tag.create(name: tag_name)
+    # 指定されたメモがユーザーのものか
+    if @my_memo
+      # 変更にタグ名が含まれていた場合
+      if params[:tag_name]
+        @tag = Tag.find_or_create_by(name: params[:tag_name])
       end
-    end
+      # 変更にファイル名が含まれていた場合
+      if params[:file_name]
+        @color_file = ColorFile.find_or_create_by(name: params[:file_name], user_id: @current_user.id)
+      end
 
-    if @memo.update(memo_params) || @memo.update(tag_id: @tag.id)
-      render json: @memo
-    else
-      render json: @memo.errors, status: :unprocessable_entity
+      if @my_memo.update(**memo_params, tag_id: @tag.id, color_file_id: @color_file.id)
+        render json: @my_memo
+      else
+        render json: @my_memo.errors, status: :unprocessable_entity
+      end
     end
   end
 
@@ -114,6 +115,12 @@ class MemosController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_memo
       @memo = Memo.find(params[:id])
+    end
+
+    def my_set_memo
+      @my_memo = @current_user.memos.find(params[:id])
+    rescue => e
+      render json: { error: "Memo does not exist" }
     end
 
     # Only allow a list of trusted parameters through.
