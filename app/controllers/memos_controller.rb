@@ -114,11 +114,11 @@ class MemosController < ApplicationController
     def my_set_memo
       @my_memo = @current_user.memos.find(params[:id])
     rescue => e
-      render json: { error: "Memo does not exist" }
+      render json: { error: "Memo does not exist" }, status: :not_found
     end
 
     # Only allow a list of trusted parameters through.
     def memo_params
-      params.require(:memo).permit(:user_id, :color_code, :comment, :url)
+      params.require(:memo).permit(:color_code, :comment, :url)
     end
 end
