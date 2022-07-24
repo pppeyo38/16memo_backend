@@ -3,14 +3,12 @@ class ApplicationController < ActionController::API
   before_action :authenticate_user!
 
   def current_user
-      authenticate_with_http_token do |id_token, options|
-          begin
-              uid = FirebaseUtils::Auth.verify_id_token(id_token)[:uid]
-              @current_user ||= User.find_by(firebase_id: uid)
-          rescue => e
-              Rails.logger.error(e.message)
-              nil
-          end
+      authenticate_with_http_token do |id_token, _options|
+          uid = FirebaseAuth.verify_id_token(id_token)['uid']
+          @current_user ||= User.find_by(firebase_id: uid)
+      rescue StandardError => e
+          Rails.logger.error(e.message)
+          nil
       end
   end
 
