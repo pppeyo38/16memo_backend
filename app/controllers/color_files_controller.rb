@@ -3,28 +3,25 @@ class ColorFilesController < ApplicationController
 
   # GET /color_files
   def index
-    # TODO: ログイン中のユーザーの user_id を取得する
-    user_id = 3
+    @my_color_files = ColorFile.eager_load(:memos).where(user_id: @current_user.id)
 
-    @color_files = ColorFile.eager_load(user: :memos).where(users: { id: user_id })
-
-    @file = @color_files.map do | color_file |
+    @my_files = @my_color_files.map do | my_color_file |
       # ファイル内カラー4色
-      @main_color = color_file.memos.first(4).map {|m| m.color_code}
-      @color_num = color_file.memos.length
+      @main_color = my_color_file.memos.first(4).map {|m| m.color_code}
+      @color_num = my_color_file.memos.length
 
       {
-        name: color_file.name,
-        user_id: color_file.user_id,
+        name: my_color_file.name,
+        user_id: my_color_file.user_id,
         memo: {
           main_color: @main_color,
           color_num: @color_num
         },
-        created_at: color_file.created_at
+        created_at: my_color_file.created_at
       }
     end
 
-    render json: @file
+    render json: @my_files
   end
 
   # GET /color_files/1
