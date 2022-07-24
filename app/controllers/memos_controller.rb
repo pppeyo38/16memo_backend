@@ -1,7 +1,7 @@
 class MemosController < ApplicationController
   # wrap_parameters format: []
   before_action :set_memo, only: %i[ update destroy ]
-  before_action :my_set_memo, only: %i[ update ]
+  before_action :my_set_memo, only: %i[ update destroy ]
 
   # GET /memos
   def index
@@ -108,7 +108,7 @@ class MemosController < ApplicationController
 
   # DELETE /memos/1
   def destroy
-    @memo.destroy
+    @my_memo.destroy
   end
 
   private
