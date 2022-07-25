@@ -1,6 +1,6 @@
 class MemosController < ApplicationController
   # wrap_parameters format: []
-  before_action :set_memo, only: %i[ update destroy ]
+  before_action :my_set_memo, only: %i[ update destroy ]
 
   # GET /memos
   def index
@@ -56,9 +56,6 @@ class MemosController < ApplicationController
 
   # POST /memos
   def create
-    # TODO: ログイン中のユーザーの user_id を取得する
-    user_id = 3
-
     tag_name = params[:tag_name]
     color_file_name = params[:color_file_name]
 
@@ -68,15 +65,15 @@ class MemosController < ApplicationController
     end
 
     @tag = Tag.find_by(name: tag_name)
-    @color_file = ColorFile.find_by(name: color_file_name, user_id: user_id)
+    @color_file = ColorFile.find_by(name: color_file_name, user_id: @current_user.id)
 
     ActiveRecord::Base.transaction do
       @tag ||= Tag.create!(name: tag_name)
-      @color_file ||= ColorFile.create!(name: color_file_name, user_id: user_id)
+      @color_file ||= ColorFile.create!(name: color_file_name, user_id: @current_user.id)
 
       @memo = Memo.create!(
         **memo_params,
-        user_id: user_id,
+        user_id: @current_user.id,
         tag_id: @tag.id,
         color_file_id: @color_file.id,
       )
@@ -89,38 +86,53 @@ class MemosController < ApplicationController
 
   # PATCH/PUT /memos/1
   def update
-    # 変更にタグ名が含まれていた場合
-    if params[:tag_name]
-      tag_name = params[:tag_name]
-
-      # タグが既に存在する場合データを取得、なければ新規作成
-      if Tag.exists?(name: tag_name)
-        @tag = Tag.find_by(name: tag_name)
-      else
-        @tag = Tag.create(name: tag_name)
+    ActiveRecord::Base.transaction do
+      if params[:tag_name]
+        @tag = Tag.find_or_create_by!(name: params[:tag_name])
       end
+
+      if params[:file_name]
+        @color_file = ColorFile.find_or_create_by!(name: params[:file_name], user_id: @current_user.id)
+      end
+
+      tag_id = @tag ? @tag.id : @my_memo.tag_id
+      color_file_id = @color_file ? @color_file.id : @my_memo.color_file_id
+
+      @my_memo.update!(
+        **memo_params,
+        tag_id: tag_id,
+        color_file_id: color_file_id,
+      )
     end
 
-    if @memo.update(memo_params) || @memo.update(tag_id: @tag.id)
-      render json: @memo
-    else
-      render json: @memo.errors, status: :unprocessable_entity
-    end
+    @updated_memo = {
+      id: @my_memo.id,
+      color_code: @my_memo.color_code,
+      comment: @my_memo.comment,
+      URL: @my_memo.url,
+      tag_name: @my_memo.tag.name,
+      created_at: @my_memo.created_at
+    }
+
+    render json: @updated_memo
+  rescue => e
+    render json: { error: "Not editable" }, status: :unprocessable_entity
   end
 
   # DELETE /memos/1
   def destroy
-    @memo.destroy
+    @my_memo.destroy
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_memo
-      @memo = Memo.find(params[:id])
+    def my_set_memo
+      @my_memo = @current_user.memos.find(params[:id])
+    rescue => e
+      render json: { error: "Memo does not exist" }, status: :not_found
     end
 
     # Only allow a list of trusted parameters through.
     def memo_params
-      params.require(:memo).permit(:user_id, :color_code, :comment, :url)
+      params.permit(:color_code, :comment, :url)
     end
 end
