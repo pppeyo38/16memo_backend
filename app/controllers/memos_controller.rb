@@ -12,7 +12,7 @@ class MemosController < ApplicationController
         id: get_memo.id,
         color_code: get_memo.color_code,
         comment: get_memo.comment,
-        URL: get_memo.url,
+        url: get_memo.url,
         tag_name: get_memo.tag.name,
         created_at: get_memo.created_at
       }
@@ -29,7 +29,7 @@ class MemosController < ApplicationController
       id: @get_memo.id,
       color_code: @get_memo.color_code,
       comment: @get_memo.comment,
-      URL: @get_memo.url,
+      url: @get_memo.url,
       tag_name: @get_memo.tag.name,
       created_at: @get_memo.created_at
     }
@@ -45,7 +45,7 @@ class MemosController < ApplicationController
         id: get_memo.id,
         color_code: get_memo.color_code,
         comment: get_memo.comment,
-        URL: get_memo.url,
+        url: get_memo.url,
         tag_name: get_memo.tag.name,
         created_at: get_memo.created_at
       }
@@ -109,7 +109,7 @@ class MemosController < ApplicationController
       id: @my_memo.id,
       color_code: @my_memo.color_code,
       comment: @my_memo.comment,
-      URL: @my_memo.url,
+      url: @my_memo.url,
       tag_name: @my_memo.tag.name,
       created_at: @my_memo.created_at
     }

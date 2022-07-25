@@ -36,7 +36,7 @@ class ColorFilesController < ApplicationController
           id: get_memo.id,
           color_code: get_memo.color_code,
           comment: get_memo.comment,
-          URL: get_memo.url,
+          url: get_memo.url,
           tag_name: get_memo.tag.name,
           created_at: get_memo.created_at
         }
