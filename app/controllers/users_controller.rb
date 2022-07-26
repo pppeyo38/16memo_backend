@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_my_account, only: %i[ account edit_nickname ]
+  before_action :set_my_account, only: %i[ account settings_account ]
 
   # GET /users
   def index
@@ -36,8 +36,12 @@ class UsersController < ApplicationController
     end
   end
 
-  def edit_nickname
-    puts @my_account.nickname
+  def settings_account
+    if @my_account.update(user_params)
+      render json: @my_account
+    else
+      render json: @my_account.errors, status: :unprocessable_entity
+    end
   end
 
   # DELETE /users/1
