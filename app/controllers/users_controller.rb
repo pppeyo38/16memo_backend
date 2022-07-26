@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_my_account, only: %i[ account settings_account delete_account ]
+  before_action :set_my_account, only: %i[ settings_account delete_account ]
 
   # GET /users
   def index
@@ -13,6 +13,15 @@ class UsersController < ApplicationController
   end
 
   def account
+    @get_firebase_user = FirebaseAuth.get_user(uid: current_user.firebase_id)
+
+    @my_account = {
+      id: current_user.id,
+      nickname: current_user.nickname,
+      created_id: current_user.created_id,
+      email: @get_firebase_user.email
+    }
+
     render json: @my_account
   end
 
