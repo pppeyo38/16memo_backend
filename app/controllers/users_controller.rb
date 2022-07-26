@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_my_account, only: %i[ account settings_account ]
+  before_action :set_my_account, only: %i[ account settings_account delete_account ]
 
   # GET /users
   def index
@@ -47,6 +47,18 @@ class UsersController < ApplicationController
   # DELETE /users/1
   def destroy
     @user.destroy
+  end
+
+  def delete_account
+    ApplicationRecord.transaction do
+      FirebaseAuth.delete_user(uid: @my_account.firebase_id)
+      @my_account.destroy
+    end
+
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.message, text: "auth_controller.rb:19" }, status: :unprocessable_entity
+  rescue Google::Apis::Error, StandardError => e
+    render json: { error: e.message }, status: :internal_server_error
   end
 
   private
