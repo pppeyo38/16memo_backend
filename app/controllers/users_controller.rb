@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[ show update destroy ]
+  before_action :set_my_account, only: %i[ account edit_nickname ]
 
   # GET /users
   def index
@@ -13,7 +13,6 @@ class UsersController < ApplicationController
   end
 
   def account
-    @my_account = current_user
     render json: @my_account
   end
 
@@ -37,15 +36,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def edit_nickname
+    puts @my_account.nickname
+  end
+
   # DELETE /users/1
   def destroy
     @user.destroy
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
+    def set_my_account
+      @my_account = current_user
     end
 
     # Only allow a list of trusted parameters through.

@@ -12,6 +12,7 @@ Rails.application.routes.draw do
 
   # ユーザー情報
   get 'account', to: 'users#account'
+  get 'edit_nickname', to: 'users#edit_nickname'
 
   # タグ検索
   get 'search', to: 'memos#search'
