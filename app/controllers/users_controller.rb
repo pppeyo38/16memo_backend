@@ -3,14 +3,18 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    # @users = User.all
-    @user = current_user
+    @users = User.all
     render json: @user
   end
 
   # GET /users/1
   def show
     render json: @user
+  end
+
+  def account
+    @my_account = current_user
+    render json: @my_account
   end
 
   # POST /users

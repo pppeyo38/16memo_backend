@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   # ログイン
   get 'login', to: 'auth#login'
 
+  # ユーザー情報
+  get 'account', to: 'users#account'
+
   # タグ検索
   get 'search', to: 'memos#search'
 end
