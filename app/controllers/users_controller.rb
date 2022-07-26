@@ -1,16 +1,19 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[ show update destroy ]
+  before_action :set_my_account, only: %i[ account settings_account delete_account ]
 
   # GET /users
   def index
-    # @users = User.all
-    @user = current_user
+    @users = User.all
     render json: @user
   end
 
   # GET /users/1
   def show
     render json: @user
+  end
+
+  def account
+    render json: @my_account
   end
 
   # POST /users
@@ -33,15 +36,34 @@ class UsersController < ApplicationController
     end
   end
 
+  def settings_account
+    if @my_account.update(user_params)
+      render json: @my_account
+    else
+      render json: @my_account.errors, status: :unprocessable_entity
+    end
+  end
+
   # DELETE /users/1
   def destroy
     @user.destroy
   end
 
+  def delete_account
+    ApplicationRecord.transaction do
+      FirebaseAuth.delete_user(uid: @my_account.firebase_id)
+      @my_account.destroy
+    end
+
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.message, text: "auth_controller.rb:19" }, status: :unprocessable_entity
+  rescue Google::Apis::Error, StandardError => e
+    render json: { error: e.message }, status: :internal_server_error
+  end
+
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
+    def set_my_account
+      @my_account = current_user
     end
 
     # Only allow a list of trusted parameters through.
