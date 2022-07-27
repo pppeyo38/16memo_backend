@@ -36,20 +36,36 @@ class MemosController < ApplicationController
     render json: @memo
   end
 
-  # GET /memos/search
+  # GET /search
   def search
-    # TODO: クエリーパラメータがあった場合となかった場合
-    @get_memos = Memo.joins(:tag).where('tags.name = ?', params[:q])
+    get_tag_name = params[:q]
 
-    @memos = @get_memos.map do | get_memo |
-      {
-        id: get_memo.id,
-        color_code: get_memo.color_code,
-        comment: get_memo.comment,
-        url: get_memo.url,
-        tag_name: get_memo.tag.name,
-        created_at: get_memo.created_at
-      }
+    if get_tag_name.blank?
+      @get_memos = Memo.preload(:tag).all
+
+      @memos = @get_memos.map do | get_memo |
+        {
+          id: get_memo.id,
+          color_code: get_memo.color_code,
+          comment: get_memo.comment,
+          url: get_memo.url,
+          tag_name: get_memo.tag.name,
+          created_at: get_memo.created_at
+        }
+      end
+    else
+      @get_memos = Memo.joins(:tag).where('tags.name = ?', params[:q])
+
+      @memos = @get_memos.map do | get_memo |
+        {
+          id: get_memo.id,
+          color_code: get_memo.color_code,
+          comment: get_memo.comment,
+          url: get_memo.url,
+          tag_name: get_memo.tag.name,
+          created_at: get_memo.created_at
+        }
+      end
     end
 
     render json: @memos
