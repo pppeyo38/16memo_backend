@@ -1,5 +1,4 @@
 class ColorFilesController < ApplicationController
-  before_action :set_color_file, only: %i[ show update destroy ]
   before_action :set_my_color_file, only: %i[ show update destroy ]
 
   # GET /color_files
@@ -93,11 +92,6 @@ class ColorFilesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_color_file
-      @color_file = ColorFile.find(params[:id])
-    end
-
     def set_my_color_file
       @my_color_file = @current_user.color_files.find(params[:id])
     rescue => e
