@@ -53,6 +53,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def settings_authAccount
+    @test = FirebaseAuth.update_user(uid: current_user.firebase_id, email: params[:email], password: params[:password])
+    render json: @test
+  end
+
   # DELETE /users/1
   def destroy
     @user.destroy

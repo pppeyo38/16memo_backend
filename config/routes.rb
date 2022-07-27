@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   # ユーザー情報
   get 'account', to: 'users#account'
   put 'settings_account', to: 'users#settings_account'
+  # firebase console上のアカウント取得
+  put 'settings_authAccount', to: 'users#settings_authAccount'
   delete 'delete_account', to: 'users#delete_account'
 
   # タグ検索

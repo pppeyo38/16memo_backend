@@ -36,7 +36,7 @@ module Firebase
           @service.signup_new_user(request)
         end
 
-        def update_user(uid:, email:, password:)
+        def update_user(uid:, email: nil, password: nil)
           request = Google::Apis::IdentitytoolkitV3::SetAccountInfoRequest.new(
             local_id: uid,
             email:,

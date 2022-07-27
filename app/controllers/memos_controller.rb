@@ -38,6 +38,7 @@ class MemosController < ApplicationController
 
   # GET /memos/search
   def search
+    # TODO: クエリーパラメータがあった場合となかった場合
     @get_memos = Memo.joins(:tag).where('tags.name = ?', params[:q])
 
     @memos = @get_memos.map do | get_memo |
