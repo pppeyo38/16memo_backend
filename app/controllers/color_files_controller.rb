@@ -25,6 +25,20 @@ class ColorFilesController < ApplicationController
     render json: @my_files
   end
 
+  # GET /files_name
+  def files_name
+    @get_my_files = ColorFile.where(user_id: current_user.id)
+
+    @get_files_name = @get_my_files.map do | get_my_file |
+      {
+        id: get_my_file.id,
+        name: get_my_file.name
+      }
+    end
+
+    render json: @get_files_name
+  end
+
   # GET /color_files/1
   def show
     # リクエストで送られてきたidのcolor_file作成者がログインユーザーのものか検証
