@@ -12,8 +12,9 @@ class AuthController < ApplicationController
     end
 
     render json: {
-      **@user.attributes,
-      email: @firebase_user.email
+      id: @user.id,
+      nickname: @user.nickname,
+      createdID: @user.createdID
     }, status: :created
   rescue ActiveRecord::RecordInvalid => e
     render json: { errors: e.message, text: "auth_controller.rb:19" }, status: :unprocessable_entity
