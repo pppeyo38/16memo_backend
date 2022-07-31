@@ -23,7 +23,7 @@ class AuthController < ApplicationController
   end
 
   def login
-    render json: current_user
+    render json: { id: current_user.id, nickname: current_user.nickname, createdID: current_user.createdID }
   end
 
   private
