@@ -28,6 +28,6 @@ class AuthController < ApplicationController
   private
 
   def user_params
-    params.permit(:nickname, :created_id)
+    params.permit(:nickname, :createdID)
   end
 end

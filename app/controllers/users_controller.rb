@@ -18,7 +18,7 @@ class UsersController < ApplicationController
     @my_account = {
       id: current_user.id,
       nickname: current_user.nickname,
-      created_id: current_user.created_id,
+      createdID: current_user.createdID,
       email: @get_firebase_user.email
     }
 
@@ -82,6 +82,6 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:firebase_id, :nickname, :created_id)
+      params.require(:user).permit(:firebase_id, :nickname, :createdID)
     end
 end
