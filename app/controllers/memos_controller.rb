@@ -10,10 +10,10 @@ class MemosController < ApplicationController
     @get_memos.each_with_index do | get_memo, index |
       @memos[index] = {
         id: get_memo.id,
-        color_code: get_memo.color_code,
+        colorCode: get_memo.colorCode,
         comment: get_memo.comment,
         url: get_memo.url,
-        tag_name: get_memo.tag.name,
+        tagName: get_memo.tag.name,
         created_at: get_memo.created_at
       }
     end
@@ -27,10 +27,10 @@ class MemosController < ApplicationController
 
     @memo = {
       id: @get_memo.id,
-      color_code: @get_memo.color_code,
+      colorCode: @get_memo.colorCode,
       comment: @get_memo.comment,
       url: @get_memo.url,
-      tag_name: @get_memo.tag.name,
+      tagName: @get_memo.tag.name,
       created_at: @get_memo.created_at
     }
     render json: @memo
@@ -46,10 +46,10 @@ class MemosController < ApplicationController
       @memos = @get_memos.map do | get_memo |
         {
           id: get_memo.id,
-          color_code: get_memo.color_code,
+          colorCode: get_memo.colorCode,
           comment: get_memo.comment,
           url: get_memo.url,
-          tag_name: get_memo.tag.name,
+          tagName: get_memo.tag.name,
           created_at: get_memo.created_at
         }
       end
@@ -59,10 +59,10 @@ class MemosController < ApplicationController
       @memos = @get_memos.map do | get_memo |
         {
           id: get_memo.id,
-          color_code: get_memo.color_code,
+          colorCode: get_memo.colorCode,
           comment: get_memo.comment,
           url: get_memo.url,
-          tag_name: get_memo.tag.name,
+          tagName: get_memo.tag.name,
           created_at: get_memo.created_at
         }
       end
@@ -82,15 +82,15 @@ class MemosController < ApplicationController
     end
 
     @tag = Tag.find_by(name: tag_name)
-    @color_file = ColorFile.find_by(name: color_file_name, user_id: @current_user.id)
+    @color_file = ColorFile.find_by(name: color_file_name, userId: @current_user.id)
 
     ActiveRecord::Base.transaction do
       @tag ||= Tag.create!(name: tag_name)
-      @color_file ||= ColorFile.create!(name: color_file_name, user_id: @current_user.id)
+      @color_file ||= ColorFile.create!(name: color_file_name, userId: @current_user.id)
 
       @memo = Memo.create!(
         **memo_params,
-        user_id: @current_user.id,
+        userId: @current_user.id,
         tag_id: @tag.id,
         color_file_id: @color_file.id,
       )
@@ -109,7 +109,7 @@ class MemosController < ApplicationController
       end
 
       if params[:file_name]
-        @color_file = ColorFile.find_or_create_by!(name: params[:file_name], user_id: @current_user.id)
+        @color_file = ColorFile.find_or_create_by!(name: params[:file_name], userId: @current_user.id)
       end
 
       tag_id = @tag ? @tag.id : @my_memo.tag_id
@@ -124,10 +124,10 @@ class MemosController < ApplicationController
 
     @updated_memo = {
       id: @my_memo.id,
-      color_code: @my_memo.color_code,
+      colorCode: @my_memo.colorCode,
       comment: @my_memo.comment,
       url: @my_memo.url,
-      tag_name: @my_memo.tag.name,
+      tagName: @my_memo.tag.name,
       created_at: @my_memo.created_at
     }
 
@@ -150,6 +150,6 @@ class MemosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def memo_params
-      params.permit(:color_code, :comment, :url)
+      params.permit(:colorCode, :comment, :url)
     end
 end

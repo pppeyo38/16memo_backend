@@ -3,19 +3,20 @@ class ColorFilesController < ApplicationController
 
   # GET /color_files
   def index
-    @my_color_files = ColorFile.eager_load(:memos).where(user_id: @current_user.id)
+    @my_color_files = ColorFile.eager_load(:memos).where(userId: @current_user.id)
 
     @my_files = @my_color_files.map do | my_color_file |
       # ファイル内カラー4色
-      @main_color = my_color_file.memos.first(4).map {|m| m.color_code}
+      @main_color = my_color_file.memos.first(4).map {|m| m.colorCode}
       @color_num = my_color_file.memos.length
 
       {
+        id: my_color_file.id,
         name: my_color_file.name,
-        user_id: my_color_file.user_id,
+        userId: my_color_file.userId,
         memo: {
-          main_color: @main_color,
-          color_num: @color_num
+          mainColor: @main_color,
+          colorNum: @color_num
         },
         created_at: my_color_file.created_at
       }
@@ -26,7 +27,7 @@ class ColorFilesController < ApplicationController
 
   # GET /files_name
   def files_name
-    @get_my_files = ColorFile.where(user_id: current_user.id)
+    @get_my_files = ColorFile.where(userId: current_user.id)
 
     @get_files_name = @get_my_files.map do | get_my_file |
       {
@@ -47,10 +48,10 @@ class ColorFilesController < ApplicationController
       @memos = @get_memos.map do | get_memo |
         {
           id: get_memo.id,
-          color_code: get_memo.color_code,
+          colorCode: get_memo.colorCode,
           comment: get_memo.comment,
           url: get_memo.url,
-          tag_name: get_memo.tag.name,
+          tagName: get_memo.tag.name,
           created_at: get_memo.created_at
         }
       end
@@ -68,7 +69,7 @@ class ColorFilesController < ApplicationController
 
   # POST /color_files
   def create
-    @my_color_file = ColorFile.new(**color_file_params, user_id: @current_user.id)
+    @my_color_file = ColorFile.new(**color_file_params, userId: @current_user.id)
 
     if @my_color_file.save
       render json: @my_color_file, status: :created, location: @my_color_file
