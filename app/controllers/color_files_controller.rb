@@ -3,7 +3,7 @@ class ColorFilesController < ApplicationController
 
   # GET /color_files
   def index
-    @my_color_files = ColorFile.eager_load(:memos).where(userId: @current_user.id)
+    @my_color_files = ColorFile.eager_load(:memos).where(user_id: @current_user.id)
 
     @my_files = @my_color_files.map do | my_color_file |
       # ファイル内カラー4色
@@ -13,7 +13,7 @@ class ColorFilesController < ApplicationController
       {
         id: my_color_file.id,
         name: my_color_file.name,
-        userId: my_color_file.userId,
+        userId: my_color_file.user_id,
         memo: {
           mainColor: @main_color,
           colorNum: @color_num
@@ -27,7 +27,7 @@ class ColorFilesController < ApplicationController
 
   # GET /files_name
   def files_name
-    @get_my_files = ColorFile.where(userId: current_user.id)
+    @get_my_files = ColorFile.where(user_id: current_user.id)
 
     @get_files_name = @get_my_files.map do | get_my_file |
       {
@@ -52,7 +52,7 @@ class ColorFilesController < ApplicationController
           comment: get_memo.comment,
           url: get_memo.url,
           tagName: get_memo.tag.name,
-          created_at: get_memo.created_at
+          createdAt: get_memo.created_at
         }
       end
 
@@ -69,7 +69,7 @@ class ColorFilesController < ApplicationController
 
   # POST /color_files
   def create
-    @my_color_file = ColorFile.new(**color_file_params, userId: @current_user.id)
+    @my_color_file = ColorFile.new(**color_file_params, user_id: @current_user.id)
 
     if @my_color_file.save
       render json: @my_color_file, status: :created, location: @my_color_file

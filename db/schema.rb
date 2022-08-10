@@ -10,16 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_05_143122) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_06_083912) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "color_files", force: :cascade do |t|
     t.string "name", null: false
-    t.bigint "userId", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["userId"], name: "index_color_files_on_userId"
+    t.index ["user_id"], name: "index_color_files_on_user_id"
   end
 
   create_table "memo_files", force: :cascade do |t|
@@ -32,7 +32,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_05_143122) do
   end
 
   create_table "memos", force: :cascade do |t|
-    t.bigint "userId", null: false
+    t.bigint "user_id", null: false
     t.bigint "tag_id", null: false
     t.bigint "color_file_id", null: false
     t.string "colorCode", null: false
@@ -42,7 +42,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_05_143122) do
     t.datetime "updated_at", null: false
     t.index ["color_file_id"], name: "index_memos_on_color_file_id"
     t.index ["tag_id"], name: "index_memos_on_tag_id"
-    t.index ["userId"], name: "index_memos_on_userId"
+    t.index ["user_id"], name: "index_memos_on_user_id"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -60,10 +60,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_05_143122) do
     t.string "nickname", null: false
   end
 
-  add_foreign_key "color_files", "users", column: "userId"
+  add_foreign_key "color_files", "users"
   add_foreign_key "memo_files", "color_files"
   add_foreign_key "memo_files", "memos"
   add_foreign_key "memos", "color_files"
   add_foreign_key "memos", "tags"
-  add_foreign_key "memos", "users", column: "userId"
+  add_foreign_key "memos", "users"
 end

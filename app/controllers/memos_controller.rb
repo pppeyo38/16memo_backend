@@ -82,15 +82,15 @@ class MemosController < ApplicationController
     end
 
     @tag = Tag.find_by(name: tag_name)
-    @color_file = ColorFile.find_by(name: color_file_name, userId: @current_user.id)
+    @color_file = ColorFile.find_by(name: color_file_name, user_id: @current_user.id)
 
     ActiveRecord::Base.transaction do
       @tag ||= Tag.create!(name: tag_name)
-      @color_file ||= ColorFile.create!(name: color_file_name, userId: @current_user.id)
+      @color_file ||= ColorFile.create!(name: color_file_name, user_id: @current_user.id)
 
       @memo = Memo.create!(
         **memo_params,
-        userId: @current_user.id,
+        user_id: @current_user.id,
         tag_id: @tag.id,
         color_file_id: @color_file.id,
       )
