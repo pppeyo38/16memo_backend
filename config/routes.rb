@@ -17,6 +17,9 @@ Rails.application.routes.draw do
   put 'settings_authAccount', to: 'users#settings_authAccount'
   delete 'delete_account', to: 'users#delete_account'
 
+  # ファイル名でメモ情報を取得
+  get 'color_file/:name', to: 'color_files#show'
+
   # メモ作成画面時に叩くファイル名一覧を返す
   get 'files_name', to: 'color_files#files_name'
 

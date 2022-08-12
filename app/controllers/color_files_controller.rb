@@ -1,5 +1,5 @@
 class ColorFilesController < ApplicationController
-  before_action :set_my_color_file, only: %i[ show update destroy ]
+  before_action :set_my_color_file, only: %i[ update destroy ]
 
   # GET /color_files
   def index
@@ -39,11 +39,12 @@ class ColorFilesController < ApplicationController
     render json: @get_files_name
   end
 
-  # GET /color_files/1
+  # GET /color_file/:name
   def show
+    @my_color_file = @current_user.color_files.find_by(name: params[:name])
     # リクエストで送られてきたidのcolor_file作成者がログインユーザーのものか検証
     if @my_color_file
-      @get_memos = Memo.joins(:tag).where(color_file_id: params[:id])
+      @get_memos = Memo.joins(:tag).where(color_file_id: @my_color_file.id)
 
       @memos = @get_memos.map do | get_memo |
         {
@@ -56,10 +57,9 @@ class ColorFilesController < ApplicationController
         }
       end
 
-      @color_file = ColorFile.find(params[:id])
       @memos_file = {
-        id: @color_file.id,
-        name: @color_file.name,
+        id: @my_color_file.id,
+        name: @my_color_file.name,
         memos: @memos
       }
 
