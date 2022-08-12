@@ -23,17 +23,21 @@ class MemosController < ApplicationController
 
   # GET /memos/1
   def show
-    @get_memo = Memo.preload(:tag).find(params[:id])
+    @get_memo = Memo.preload(:tag, :color_file).find(params[:id])
 
-    @memo = {
-      id: @get_memo.id,
-      colorCode: @get_memo.colorCode,
-      comment: @get_memo.comment,
-      url: @get_memo.url,
-      tagName: @get_memo.tag.name,
-      created_at: @get_memo.created_at
+    @res = {
+      userId: @get_memo.user_id,
+      memo: {
+        id: @get_memo.id,
+        colorCode: @get_memo.colorCode,
+        comment: @get_memo.comment,
+        url: @get_memo.url,
+        tagName: @get_memo.tag.name,
+        createdAt: @get_memo.created_at,
+        fileName: @get_memo.color_file.name
+      }
     }
-    render json: @memo
+    render json: @res
   end
 
   # GET /search
@@ -95,7 +99,13 @@ class MemosController < ApplicationController
         color_file_id: @color_file.id,
       )
     end
-    render json: @memo, status: :created, location: @memo
+
+    @res = {
+      fileName: @color_file.name,
+      fileId: @color_file.id,
+    }
+
+    render json: @res, status: :created, location: @memo
 
   rescue => e
     render json: { error: e.message }, status: :unprocessable_entity
