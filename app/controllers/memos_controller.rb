@@ -99,13 +99,7 @@ class MemosController < ApplicationController
         color_file_id: @color_file.id,
       )
     end
-
-    @res = {
-      fileName: @color_file.name,
-      fileId: @color_file.id,
-    }
-
-    render json: @res, status: :created, location: @memo
+    render json: @memo, status: :created, location: @memo
 
   rescue => e
     render json: { error: e.message }, status: :unprocessable_entity
@@ -118,8 +112,8 @@ class MemosController < ApplicationController
         @tag = Tag.find_or_create_by!(name: params[:tag_name])
       end
 
-      if params[:file_name]
-        @color_file = ColorFile.find_or_create_by!(name: params[:file_name], userId: @current_user.id)
+      if params[:color_file_name]
+        @color_file = ColorFile.find_or_create_by!(name: params[:color_file_name], user_id: @current_user.id)
       end
 
       tag_id = @tag ? @tag.id : @my_memo.tag_id
