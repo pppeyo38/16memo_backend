@@ -1,5 +1,5 @@
 class ColorFilesController < ApplicationController
-  before_action :set_my_color_file, only: %i[ update destroy ]
+  before_action :set_my_color_file, only: %i[ update ]
 
   # GET /color_files
   def index
@@ -89,7 +89,12 @@ class ColorFilesController < ApplicationController
 
   # DELETE /color_files/1
   def destroy
-    @my_color_file.destroy
+    if params[:id].include?(",") then
+      @select_id = params[:id].split(",")
+    else
+      @select_id = params[:id]
+    end
+    ColorFile.where(id: @select_id).destroy_all
   end
 
   private
