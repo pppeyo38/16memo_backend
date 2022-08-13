@@ -99,7 +99,7 @@ class ColorFilesController < ApplicationController
 
   private
     def set_my_color_file
-      @my_color_file = @current_user.color_files.find(params[:id])
+      @my_color_file = @current_user.color_files.find_by(name: params[:name])
     rescue => e
       render json: { error: "File does not exist" }, status: :not_found
     end

@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
   # ファイル名でメモ情報を取得
   get 'color_file/:name', to: 'color_files#show'
+  put 'color_file/:name', to: 'color_files#update'
 
   # メモ作成画面時に叩くファイル名一覧を返す
   get 'files_name', to: 'color_files#files_name'
