@@ -1,6 +1,6 @@
 class MemosController < ApplicationController
   # wrap_parameters format: []
-  before_action :my_set_memo, only: %i[ update destroy ]
+  before_action :my_set_memo, only: %i[ update ]
 
   # GET /memos
   def index
@@ -142,7 +142,12 @@ class MemosController < ApplicationController
 
   # DELETE /memos/1
   def destroy
-    @my_memo.destroy
+    if params[:id].include?(",") then
+      @select_id = params[:id].split(",")
+    else
+      @select_id = params[:id]
+    end
+    @current_user.memos.where(id: @select_id).destroy_all
   end
 
   private
