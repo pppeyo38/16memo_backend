@@ -53,11 +53,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_06_083912) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.string "firebase_id", null: false
     t.string "createdID", null: false
     t.string "nickname", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "color_files", "users"
