@@ -23,10 +23,10 @@ class MemosController < ApplicationController
 
   # GET /memos/1
   def show
-    @get_memo = Memo.preload(:tag, :color_file).find(params[:id])
+    @get_memo = Memo.preload(:tag, :color_file, :user).find(params[:id])
 
     @res = {
-      userId: @get_memo.user_id,
+      uid: @get_memo.user.firebase_id,
       memo: {
         id: @get_memo.id,
         colorCode: @get_memo.colorCode,
