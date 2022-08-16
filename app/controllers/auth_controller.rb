@@ -5,12 +5,19 @@ class AuthController < ApplicationController
     ActiveRecord::Base.transaction do
       # User.create が失敗したときにトランザクションが機能しない
       @firebase_user = FirebaseAuth.create_user(email: params[:email], password: params[:password])
+
+      while @unique_createID.blank? || User.find_by(createdID: @unique_createID).present? do
+        @unique_createID = SecureRandom.alphanumeric(10)
+      end
+      puts "------------"
+      puts @unique_createID
+      puts "------------"
       @user = User.create!(
-        **user_params,
-        firebase_id: @firebase_user.local_id
+        nickname: params[:nickname],
+        firebase_id: @firebase_user.local_id,
+        createdID: @unique_createID
       )
     end
-
     render json: {
       id: @user.id,
       nickname: @user.nickname,
