@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_my_account, only: %i[ settings_account delete_account ]
+  skip_before_action :authenticate_user!, only: %i[ destroy ]
 
   # GET /users
   def index
@@ -60,7 +61,7 @@ class UsersController < ApplicationController
 
   # DELETE /users/1
   def destroy
-    @user.destroy
+    User.find(params[:id]).destroy
   end
 
   def delete_account
