@@ -1,0 +1,9 @@
+services:
+  - name: git-scm-example-site
+    type: web
+    env: ruby
+    buildCommand: bundle install
+    startCommand: bundle exec puma -C config/puma.rb
+    envVars:
+      - key: SECRET_KEY_BASE
+        generateValue: true
