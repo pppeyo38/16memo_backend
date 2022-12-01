@@ -10,7 +10,8 @@ development:
 
 production:
   <<: *default
-  database: iromemo_backend_production
-  username: iromemo_backend
-  password: <%= ENV["IROMEMO_BACKEND_DATABASE_PASSWORD"] %>
+  # database: iromemo_backend_production
+  # username: iromemo_backend
+  # password: <%= ENV["IROMEMO_BACKEND_DATABASE_PASSWORD"] %>
+  adapter: postgresql
   url: <%= ENV['DATABASE_URL'] %>
