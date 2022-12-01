@@ -37,5 +37,6 @@ module IromemoBackend
     config.api_only = true
 
     config.autoload_paths += %W(#{config.root}/lib)
+    config.hosts << 'iromemo.onrender.com'
   end
 end

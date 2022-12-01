@@ -1,9 +1,25 @@
+databases:
+  - name: Iromemo
+    databaseName: iromemo
+    user: iromemo_user
+    region: singapore
+
 services:
-  - name: git-scm-example-site
-    type: web
+  - type: web
+    name: Iromemo
     env: ruby
-    buildCommand: bundle install
-    startCommand: bundle exec puma -C config/puma.rb
+    region: singapore
+    plan: free
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
     envVars:
-      - key: SECRET_KEY_BASE
-        generateValue: true
+      - key: LANG
+        value: en_US.UTF-8
+      - key: RACK_ENV
+        value: production
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: enabled
+      - key: RAILS_SERVE_STATIC_FILES
+        value: enabled
