@@ -11,4 +11,6 @@ development:
 production:
   <<: *default
   adapter: postgresql
+  prepared_statements: false
+  advisory_locks: false
   url: <%= ENV['DATABASE_URL'] %>
